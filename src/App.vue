@@ -17,11 +17,11 @@
       </div>
     </form>
     <div class="crypto-container">
-      <div class="crypts" v-for="(item,name) in CryptoList" :key="item._id">
+      <div class="crypts" v-for="(item,name) in CryptosList" :key="item._id">
         <p class="price">${{formatPrice(item.USD)}}</p>
         <div class="lower">
           <p class="crypto-label">{{name}}</p>
-          <button class="delete-btn" @click.prevent="deleteCrypto(name)"><img src="@/assets/trash.svg" alt="trash"></button>
+          <button class="delete-btn" @click.prevent="deleteCrypto(name)"><img src="@/assets/trash.svg" id="trash" alt="trash"></button>
         </div>
       </div> 
     </div>
@@ -35,12 +35,12 @@ import axios from 'axios';
 export default {
   data(){
     return{
-      baseApiURL:'http://localhost:4000/api',
+      baseApiURL:process.env.VUE_APP_BASE_API_URL,
       crypto:{
         name:''
       },
       Cryptos:[],
-      CryptoList:{}
+      CryptosList:{}
     }
   },
   created(){
@@ -53,8 +53,8 @@ export default {
 
         let names = Array.prototype.map.call(this.Cryptos, s=>s.name).toString();
         
-        axios.get(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC&tsyms=${names}&tsyms=USD&api_key=3caf3b89db0b3de33fa914bd5856725f29a1ec2e87b32c965329c807fd463867`).then(res =>{
-          this.CryptoList = res.data
+        axios.get(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${names}&tsyms=USD&api_key=3caf3b89db0b3de33fa914bd5856725f29a1ec2e87b32c965329c807fd463867`).then(res =>{
+          this.CryptosList = res.data
         }).catch(error =>{
           console.log(error);
         })
@@ -74,9 +74,9 @@ export default {
       })
     },
     deleteCrypto(name){
-       let foundObj = this.Cryptos.find(x=> x.name === name)
+       let foundObj = this.Cryptos.find(x => x.name === name)
 
-       let indexOfArrayItem = this.Cryptos.findIndex(i=>i._id === foundObj._id);
+       let indexOfArrayItem = this.Cryptos.findIndex(i => i._id === foundObj._id);
 
        axios.delete(`${this.baseApiURL}/delete-crypto/${foundObj._id}`).then(()=>{
          this.Cryptos.splice(indexOfArrayItem,1);
@@ -156,6 +156,7 @@ button.add{
   padding: 1em 3em;
   border-top-right-radius: .3em;
   border-bottom-right-radius: .3em;
+  cursor: pointer;
 
 }
 
@@ -203,6 +204,7 @@ p.info{
   width: 2em;
   height: 3em;
   outline: none;
+  cursor: pointer;
 }
 
 

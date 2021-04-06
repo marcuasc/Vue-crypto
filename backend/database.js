@@ -1,3 +1,3 @@
 module.exports = {
-  db: "mongodb://localhost:27017/mooncoins",
+  db: process.env.MONGO_CONNECTION_URI,
 };

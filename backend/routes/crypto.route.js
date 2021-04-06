@@ -3,7 +3,7 @@ const cryptoRoute = express.Router();
 
 let CryptoModel = require("../models/Crypto");
 
-cryptoRoute.route("/").get((req, res) => {
+cryptoRoute.route("/").get((req, res, next) => {
   CryptoModel.find((error, data) => {
     if (error) {
       return next(error);
